@@ -2,7 +2,7 @@ package com.google.firebase.example.fireeats.util
 
 import android.content.Context
 import androidx.startup.Initializer
-//import com.google.firebase.example.fireeats.BuildConfig
+import com.google.firebase.example.fireeats.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -17,9 +17,9 @@ class FirestoreInitializer : Initializer<FirebaseFirestore> {
     override fun create(context: Context): FirebaseFirestore {
         val firestore = Firebase.firestore
         // Use emulators only in debug builds
-//        if (BuildConfig.DEBUG) {
-//        }
-        firestore.useEmulator(FIRESTORE_EMULATOR_HOST, FIRESTORE_EMULATOR_PORT)
+        if (false) {
+            firestore.useEmulator(FIRESTORE_EMULATOR_HOST, FIRESTORE_EMULATOR_PORT)
+        }
         return firestore
     }
 

@@ -6,7 +6,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
  * Restaurant POJO.
  */
 @IgnoreExtraProperties
-data class Restaurant(
+data class Country(
     var name: String? = null,
     var continent: String? = null,
     var typeState: String? = null,

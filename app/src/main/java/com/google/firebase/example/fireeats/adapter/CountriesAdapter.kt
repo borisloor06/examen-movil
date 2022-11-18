@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.example.fireeats.R
 import com.google.firebase.example.fireeats.databinding.ItemRestaurantBinding
-import com.google.firebase.example.fireeats.model.Restaurant
-import com.google.firebase.example.fireeats.util.RestaurantUtil
+import com.google.firebase.example.fireeats.model.Country
+import com.google.firebase.example.fireeats.util.CountriesUtil
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
@@ -15,10 +15,10 @@ import com.google.firebase.firestore.ktx.toObject
 /**
  * RecyclerView adapter for a list of Restaurants.
  */
-open class RestaurantAdapter(query: Query, private val listener: OnRestaurantSelectedListener) :
-        FirestoreAdapter<RestaurantAdapter.ViewHolder>(query) {
+open class CountriesAdapter(query: Query, private val listener: OnCountrySelectedListener) :
+        FirestoreAdapter<CountriesAdapter.ViewHolder>(query) {
 
-    interface OnRestaurantSelectedListener {
+    interface OnCountrySelectedListener {
 
         fun onRestaurantSelected(restaurant: DocumentSnapshot)
     }
@@ -36,10 +36,10 @@ open class RestaurantAdapter(query: Query, private val listener: OnRestaurantSel
 
         fun bind(
             snapshot: DocumentSnapshot,
-            listener: OnRestaurantSelectedListener?
+            listener: OnCountrySelectedListener?
         ) {
 
-            val restaurant = snapshot.toObject<Restaurant>()
+            val restaurant = snapshot.toObject<Country>()
             if (restaurant == null) {
                 return
             }
@@ -60,7 +60,7 @@ open class RestaurantAdapter(query: Query, private val listener: OnRestaurantSel
             binding.restaurantItemNumRatings.text = resources.getString(
                     R.string.fmt_num_ratings,
                     numRatings)
-            binding.restaurantItemPrice.text = RestaurantUtil.getPriceString(restaurant)
+            binding.restaurantItemPrice.text = CountriesUtil.getPriceString(restaurant)
 
             // Click listener
             binding.root.setOnClickListener {

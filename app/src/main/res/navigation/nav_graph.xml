@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/RestaurantDetailFragment"
-        android:name="com.google.firebase.example.fireeats.RestaurantDetailFragment"
+        android:name="com.google.firebase.example.fireeats.CountriesDetailFragment"
         tools:layout="@layout/fragment_restaurant_detail" >
         <argument
             android:name="key_restaurant_id"

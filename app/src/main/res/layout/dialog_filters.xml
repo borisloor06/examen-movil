@@ -21,11 +21,10 @@
         android:id="@+id/icon_category"
         style="@style/AppTheme.FilterIcon"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/spinnerCategory"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spinnerCategory"
-        app:srcCompat="@drawable/ic_fastfood_white_24dp"
+        app:srcCompat="@drawable/ic_baseline_synagogue_24"
         app:tint="@color/greySecondary" />
 
     <Spinner
@@ -48,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinnerCity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spinnerCity"
-        app:srcCompat="@drawable/ic_place_white_24px"
+        app:srcCompat="@drawable/earth_americas_solid"
         app:tint="@color/greySecondary" />
 
     <Spinner
@@ -92,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinnerSort"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spinnerSort"
-        app:srcCompat="@drawable/ic_sort_white_24px"
+        app:srcCompat="@drawable/up_right_and_down_left_from_center_solid"
         app:tint="@color/greySecondary" />
 
     <Spinner

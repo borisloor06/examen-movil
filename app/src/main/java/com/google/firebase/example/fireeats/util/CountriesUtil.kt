@@ -2,7 +2,7 @@ package com.google.firebase.example.fireeats.util
 
 import android.content.Context
 import com.google.firebase.example.fireeats.R
-import com.google.firebase.example.fireeats.model.Restaurant
+import com.google.firebase.example.fireeats.model.Country
 import java.util.Arrays
 import java.util.Locale
 import java.util.Random
@@ -10,10 +10,11 @@ import java.util.Random
 /**
  * Utilities for Restaurants.
  */
-object RestaurantUtil {
+object CountriesUtil {
 
-    private const val RESTAURANT_URL_FMT = "https://storage.googleapis.com/firestorequickstarts.appspot.com/food_%d.png"
-    private const val MAX_IMAGE_NUM = 22
+    private const val RESTAURANT_URL_FMT = "https://res.cloudinary.com/dtmsfgjzi/image/upload/flags/%d"
+
+    private const val MAX_IMAGE_NUM = 10
 
     private val NAME_FIRST_WORDS = arrayOf(
         "Afganistán", "Albania", "Alemania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua y Barbuda",
@@ -47,8 +48,8 @@ object RestaurantUtil {
     /**
      * Create a random Restaurant POJO.
      */
-    fun getRandom(context: Context): Restaurant {
-        val restaurant = Restaurant()
+    fun getRandom(context: Context): Country {
+        val restaurant = Country()
         val random = Random()
 
         // Cities (first elemnt is 'Any')
@@ -77,16 +78,14 @@ object RestaurantUtil {
      * Get a random image.
      */
     private fun getRandomImageUrl(random: Random): String {
-        // Integer between 1 and MAX_IMAGE_NUM (inclusive)
         val id = random.nextInt(MAX_IMAGE_NUM) + 1
-
         return String.format(Locale.getDefault(), RESTAURANT_URL_FMT, id)
     }
 
     /**
      * Get price represented as dollar signs.
      */
-    fun getPriceString(restaurant: Restaurant): String {
+    fun getPriceString(restaurant: Country): String {
         return getPriceString(restaurant.size)
     }
 

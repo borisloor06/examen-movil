@@ -12,10 +12,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,9 +23,9 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.example.fireeats.databinding.FragmentMainBinding
-import com.google.firebase.example.fireeats.adapter.RestaurantAdapter
-import com.google.firebase.example.fireeats.model.Restaurant
-import com.google.firebase.example.fireeats.util.RestaurantUtil
+import com.google.firebase.example.fireeats.adapter.CountriesAdapter
+import com.google.firebase.example.fireeats.model.Country
+import com.google.firebase.example.fireeats.util.CountriesUtil
 import com.google.firebase.example.fireeats.viewmodel.MainActivityViewModel
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,14 +36,14 @@ import com.google.firebase.ktx.Firebase
 
 class MainFragment : Fragment(),
     FilterDialogFragment.FilterListener,
-    RestaurantAdapter.OnRestaurantSelectedListener {
+    CountriesAdapter.OnCountrySelectedListener {
 
     lateinit var firestore: FirebaseFirestore
     private var query: Query? = null
 
     private lateinit var binding: FragmentMainBinding
     private lateinit var filterDialog: FilterDialogFragment
-    private var adapter: RestaurantAdapter? = null
+    private var adapter: CountriesAdapter? = null
 
     private lateinit var viewModel: MainActivityViewModel
     private val signInLauncher = registerForActivityResult(
@@ -58,34 +55,7 @@ class MainFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        setHasOptionsMenu(true)
-        val menuHost: MenuHost = requireActivity()
-
-        // Add menu items without using the Fragment Menu APIs
-        // Note how we can tie the MenuProvider to the viewLifecycleOwner
-        // and an optional Lifecycle.State (here, RESUMED) to indicate when
-        // the menu should be visible
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.menu_main, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (menuItem.itemId) {
-                    R.id.menu_sign_out -> {
-                        // clearCompletedTasks()
-                        true
-                    }
-                    R.id.menu_add_items -> {
-                        // loadTasks(true)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        setHasOptionsMenu(true)
         binding = FragmentMainBinding.inflate(inflater, container, false);
         return binding.root;
     }
@@ -109,7 +79,7 @@ class MainFragment : Fragment(),
 
         // RecyclerView
         query?.let {
-            adapter = object : RestaurantAdapter(it, this@MainFragment) {
+            adapter = object : CountriesAdapter(it, this@MainFragment) {
                 override fun onDataChanged() {
                     // Show/hide content if the query returns empty.
                     if (itemCount == 0) {
@@ -168,8 +138,14 @@ class MainFragment : Fragment(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        return super.onOptionsItemSelected(item)
+            when(item.itemId){
+                R.id.menu_add_items -> onAddItemsClicked()
+                R.id.menu_sign_out -> {
+                    AuthUI.getInstance().signOut(requireContext())
+                    startSignIn()
+                }
+            }
+            return super.onOptionsItemSelected(item)
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
@@ -213,17 +189,17 @@ class MainFragment : Fragment(),
 
         // Category (equality filter)
         if (filters.hasCategory()) {
-            query = query.whereEqualTo(Restaurant.FIELD_CATEGORY, filters.typeState)
+            query = query.whereEqualTo(Country.FIELD_CATEGORY, filters.typeState)
         }
 
         // City (equality filter)
         if (filters.hasCity()) {
-            query = query.whereEqualTo(Restaurant.FIELD_CITY, filters.continet)
+            query = query.whereEqualTo(Country.FIELD_CITY, filters.continet)
         }
 
         // Price (equality filter)
         if (filters.hasPrice()) {
-            query = query.whereEqualTo(Restaurant.FIELD_PRICE, filters.size)
+            query = query.whereEqualTo(Country.FIELD_PRICE, filters.size)
         }
 
         // Sort by (orderBy with direction)
@@ -255,9 +231,9 @@ class MainFragment : Fragment(),
     private fun startSignIn() {
         // Sign in with FirebaseUI
         val intent = AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(listOf(AuthUI.IdpConfig.EmailBuilder().build()))
-                .setIsSmartLockEnabled(false)
-                .build()
+            .setAvailableProviders(listOf(AuthUI.IdpConfig.EmailBuilder().build()))
+            .setIsSmartLockEnabled(false)
+            .build()
 
         signInLauncher.launch(intent)
         viewModel.isSigningIn = true
@@ -267,7 +243,7 @@ class MainFragment : Fragment(),
         val restaurantsRef = firestore.collection("restaurants")
         for (i in 0..9) {
             // Create random countries / ratings
-            val randomRestaurant = RestaurantUtil.getRandom(requireContext())
+            val randomRestaurant = CountriesUtil.getRandom(requireContext())
 
             // Add countrie
             restaurantsRef.add(randomRestaurant)
@@ -295,4 +271,4 @@ class MainFragment : Fragment(),
 
         private const val LIMIT = 50
     }
-}
+    }

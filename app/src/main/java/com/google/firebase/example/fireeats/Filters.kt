@@ -2,8 +2,8 @@ package com.google.firebase.example.fireeats
 
 import android.content.Context
 import android.text.TextUtils
-import com.google.firebase.example.fireeats.model.Restaurant
-import com.google.firebase.example.fireeats.util.RestaurantUtil
+import com.google.firebase.example.fireeats.model.Country
+import com.google.firebase.example.fireeats.util.CountriesUtil
 import com.google.firebase.firestore.Query
 
 /**
@@ -61,7 +61,7 @@ class Filters {
         if (size > 0) {
             desc.append(" for ")
             desc.append("<b>")
-            desc.append(RestaurantUtil.getPriceString(size))
+            desc.append(CountriesUtil.getPriceString(size))
             desc.append("</b>")
         }
 
@@ -70,8 +70,8 @@ class Filters {
 
     fun getOrderDescription(context: Context): String {
         return when (sortBy) {
-            Restaurant.FIELD_PRICE -> context.getString(R.string.sorted_by_price)
-            Restaurant.FIELD_POPULARITY -> context.getString(R.string.sorted_by_popularity)
+            Country.FIELD_PRICE -> context.getString(R.string.sorted_by_price)
+            Country.FIELD_POPULARITY -> context.getString(R.string.sorted_by_popularity)
             else -> context.getString(R.string.sorted_by_rating)
         }
     }
@@ -81,7 +81,7 @@ class Filters {
         val default: Filters
             get() {
                 val filters = Filters()
-                filters.sortBy = Restaurant.FIELD_AVG_RATING
+                filters.sortBy = Country.FIELD_AVG_RATING
                 filters.sortDirection = Query.Direction.DESCENDING
 
                 return filters

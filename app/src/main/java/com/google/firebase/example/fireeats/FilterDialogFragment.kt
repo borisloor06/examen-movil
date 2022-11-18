@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.example.fireeats.databinding.DialogFiltersBinding
-import com.google.firebase.example.fireeats.model.Restaurant
+import com.google.firebase.example.fireeats.model.Country
 import com.google.firebase.firestore.Query
 
 /**
@@ -53,13 +53,13 @@ class FilterDialogFragment : DialogFragment() {
         get() {
             val selected = binding.spinnerSort.selectedItem as String
             if (getString(R.string.sort_by_rating) == selected) {
-                return Restaurant.FIELD_AVG_RATING
+                return Country.FIELD_AVG_RATING
             }
             if (getString(R.string.sort_by_price) == selected) {
-                return Restaurant.FIELD_PRICE
+                return Country.FIELD_PRICE
             }
             return if (getString(R.string.sort_by_popularity) == selected) {
-                Restaurant.FIELD_POPULARITY
+                Country.FIELD_POPULARITY
             } else {
                 null
             }

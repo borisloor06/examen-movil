@@ -11,13 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.example.fireeats.databinding.FragmentRestaurantDetailBinding
 import com.google.firebase.example.fireeats.adapter.RatingAdapter
 import com.google.firebase.example.fireeats.model.Rating
-import com.google.firebase.example.fireeats.model.Restaurant
-import com.google.firebase.example.fireeats.util.RestaurantUtil
+import com.google.firebase.example.fireeats.model.Country
+import com.google.firebase.example.fireeats.util.CountriesUtil
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
@@ -29,7 +28,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
-class RestaurantDetailFragment : Fragment(),
+class CountriesDetailFragment : Fragment(),
     EventListener<DocumentSnapshot>,
         RatingDialogFragment.RatingListener {
 
@@ -51,7 +50,7 @@ class RestaurantDetailFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
 
         // Get restaurant ID from extras
-        val restaurantId = RestaurantDetailFragmentArgs.fromBundle(requireArguments()).keyRestaurantId
+        val restaurantId = CountriesDetailFragmentArgs.fromBundle(requireArguments()).keyRestaurantId
 
         // Initialize Firestore
         firestore = Firebase.firestore
@@ -112,20 +111,20 @@ class RestaurantDetailFragment : Fragment(),
         }
 
         snapshot?.let {
-            val restaurant = snapshot.toObject<Restaurant>()
+            val restaurant = snapshot.toObject<Country>()
             if (restaurant != null) {
                 onRestaurantLoaded(restaurant)
             }
         }
     }
 
-    private fun onRestaurantLoaded(restaurant: Restaurant) {
+    private fun onRestaurantLoaded(restaurant: Country) {
         binding.restaurantName.text = restaurant.name
         binding.restaurantRating.rating = restaurant.avgRating.toFloat()
         binding.restaurantNumRatings.text = getString(R.string.fmt_num_ratings, restaurant.numRatings)
         binding.restaurantCity.text = restaurant.continent
         binding.restaurantCategory.text = restaurant.typeState
-        binding.restaurantPrice.text = RestaurantUtil.getPriceString(restaurant)
+        binding.restaurantPrice.text = CountriesUtil.getPriceString(restaurant)
 
         // Background image
         Glide.with(binding.restaurantImage.context)
@@ -168,22 +167,22 @@ class RestaurantDetailFragment : Fragment(),
 
         // In a transaction, add the new rating and update the aggregate totals
         return firestore.runTransaction { transaction ->
-            val restaurant = transaction.get(restaurantRef).toObject<Restaurant>()
+            val country = transaction.get(restaurantRef).toObject<Country>()
                 ?: throw Exception("Restaurant not found at ${restaurantRef.path}")
 
             // Compute new number of ratings
-            val newNumRatings = restaurant.numRatings + 1
+            val newNumRatings = country.numRatings + 1
 
             // Compute new average rating
-            val oldRatingTotal = restaurant.avgRating * restaurant.numRatings
+            val oldRatingTotal = country.avgRating * country.numRatings
             val newAvgRating = (oldRatingTotal + rating.rating) / newNumRatings
 
             // Set new restaurant info
-            restaurant.numRatings = newNumRatings
-            restaurant.avgRating = newAvgRating
+            country.numRatings = newNumRatings
+            country.avgRating = newAvgRating
 
             // Commit to Firestore
-            transaction.set(restaurantRef, restaurant)
+            transaction.set(restaurantRef, country)
             transaction.set(ratingRef, rating)
 
             null
